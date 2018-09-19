@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/rootView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".UI.SelectedBooking.CheckOutAlertScreen"
+    >
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:background="#FFFFFFFF"
+        android:layout_width="fill_parent"
+        android:layout_marginBottom="15dp"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:id="@+id/check_out_hotel"
+                android:src="@drawable/app_logo"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:textSize="@dimen/verylargeFont"
+                android:textColor="@color/text_black"
+                android:id="@+id/hotel_name_check_out"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:padding="5dp"
+                android:layout_height="wrap_content"
+                android:text="Zingo Hotels Pvt Ltd"
+
+                />
+
+            <android.support.v7.widget.AppCompatButton
+                android:textSize="@dimen/largeFont"
+                android:textColor="@android:color/white"
+                android:id="@+id/room_number"
+                android:background="@drawable/selector_button_app"
+                android:layout_width="wrap_content"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/activity_large_margin"
+                android:layout_marginTop="10.0dip"
+                android:layout_marginRight="@dimen/activity_large_margin"
+                android:text="Room 101"
+                android:textAllCaps="false"
+
+                />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:textSize="@dimen/verylargeFont"
+                android:textColor="@color/text_black"
+                android:id="@+id/check_out_alert"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
+                android:padding="5dp"
+                android:layout_height="wrap_content"
+                android:text="@string/check_out_alert"
+
+                />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:textSize="@dimen/largeFont"
+                android:textColor="@color/colorAccent"
+                android:id="@+id/check_out_time"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:padding="5dp"
+                android:layout_height="wrap_content"
+                android:text="Check out time is at 11:00 am"
+                />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:textSize="@dimen/largeFont"
+                android:textColor="@color/grey_charcoal"
+                android:id="@+id/check_out_message"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:text="@string/check_out_extend_text"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/red_combo"
+                    android:layout_weight="1">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:textSize="@dimen/megaFont"
+                        android:textColor="@android:color/white"
+                        android:id="@+id/check_out_now"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content"
+                        android:text="Check out now."
+                        />
+
+                    <ImageView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/hotel_check_out"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/green_combo"
+                    android:layout_weight="1">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:textSize="@dimen/megaFont"
+                        android:textColor="@android:color/white"
+                        android:id="@+id/check_out_later"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:padding="5dp"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content"
+                        android:text="@string/check_out_later"
+                        />
+
+                    <ImageView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/hotel_check_out_later"/>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:textSize="@dimen/largeFont"
+                android:textColor="@color/text_black"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:text="@string/check_out_come_back"
+                />
+
+            <android.support.v7.widget.AppCompatButton
+                android:textSize="@dimen/largeFont"
+                android:textColor="@android:color/white"
+                android:id="@+id/cancel_screen"
+                android:background="@drawable/selector_button_app"
+                android:layout_width="100dp"
+                android:padding="5dp"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/activity_large_margin"
+                android:layout_marginTop="10.0dip"
+                android:layout_marginRight="@dimen/activity_large_margin"
+                android:text="Close"
+                android:textAllCaps="false"
+
+                />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">ZingoGuest</string>
+
+    <!--Custom Font Type imported,refer main->assets->font folder-->
+    <string name="ColonnaMT">ColonnaMT</string>
+    <string name="Leprosy">Leprosy</string>
+    <string name="BomBardment">bombardment_shadow</string>
+    <string name="mina">Mina_is_gone_3D</string>
+    <string name="Yeysk">Yeysk</string>
+    <string name="Maribel_Suit">Maribel_Suit</string>
+    <string name="arial">arial</string>
+    <string name="Mistral">Mistral</string>
+
+    <!--Splash screen-->
+    <string name="splash_app_name">Guest App</string>
+    <string name="powered_by_zingo">Powered By Zingo</string>
+    <string name="copyright_lucida">&#9400; Lucida Hospitality Pvt Ltd</string>
+
+    <!--Guest Login-->
+    <string name="login_app_name">ZingoGuest</string>
+    <string name="login_app_desc">Manage your Hotel bookings</string>
+    <string name="verify_text">Verify your Mobile Number</string>
+    <string name="verify_msg">Enter the 6-digit code we sent to </string>
+
+    <!--Welcome Screen-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Zingo Hotels</string>
+
+    <!--Checkout Alert-->
+    <string name="check_out_alert">Ready to Check out?</string>
+    <string name="check_out_extend_text">Request a late check-out if you need more time!</string>
+    <string name="check_out_later">Check out later.</string>
+    <string name="check_out_come_back">Come back to this screen to check-out any time before 11:00 am</string>
+
+    <!--Checkout Extend-->
+    <string name="check_out_choose">Select your new check-out time</string>
+
+    <!--Trip Details-->
+    <string name="trip_details_text">Your Trip Details</string>
+
+</resources>
