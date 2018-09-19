@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import app.zingo.zingoguest.Model.WeatherData;
@@ -31,7 +32,8 @@ public class WelcomeScreen extends AppCompatActivity {
     private static  String TAG = "WelcomeScreen";
     private static DrawerLayout drawer;
 
-    TextView cityField, detailsField, currentTemperatureField, humidity_field, pressure_field, updatedField,weatherIcon;
+    TextView cityField, detailsField, currentTemperatureField,weatherIcon,
+                currentMonth,currentDate,currentDay;
     Typeface weatherFont;
 
 
@@ -58,11 +60,13 @@ public class WelcomeScreen extends AppCompatActivity {
             toggle.syncState();
 
             cityField = (TextView)findViewById(R.id.city_field);
-            updatedField = (TextView)findViewById(R.id.updated_field);
             detailsField = (TextView)findViewById(R.id.details_field);
             currentTemperatureField = (TextView)findViewById(R.id.current_temperature_field);
-            humidity_field = (TextView)findViewById(R.id.humidity_field);
-            pressure_field = (TextView)findViewById(R.id.pressure_field);
+            currentMonth = (TextView)findViewById(R.id.month);
+            currentDate = (TextView)findViewById(R.id.current_date);
+            currentDay = (TextView)findViewById(R.id.current_day);
+
+
             weatherIcon = (TextView) findViewById(R.id.weather_icon);
             weatherFont = Typeface.createFromAsset(getAssets(), "font/weathericons-regular-webfont.ttf");
             weatherIcon.setTypeface(weatherFont);
@@ -70,6 +74,14 @@ public class WelcomeScreen extends AppCompatActivity {
 
 
             getWeather("12.934533","77.626579");
+
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM,yyyy");
+            SimpleDateFormat sdfs = new SimpleDateFormat("dd");
+            SimpleDateFormat sdfd = new SimpleDateFormat("EEEE");
+
+            currentMonth.setText(""+sdf.format(new Date()));
+            currentDate.setText(""+sdfs.format(new Date()));
+            currentDay.setText(""+sdfd.format(new Date()));
 
 
 
@@ -100,11 +112,8 @@ public class WelcomeScreen extends AppCompatActivity {
 
                         DateFormat df = DateFormat.getDateTimeInstance();
                         cityField.setText(s.getName());
-                        updatedField.setText(df.format(new Date(s.getDt())));
                         detailsField.setText(s.getWeather().get(0).getDescription());
                         currentTemperatureField.setText( s.getMain().getTemp()+ "°");
-                        humidity_field.setText("Humidity: "+s.getMain().getHumidity());
-                        pressure_field.setText("Pressure: "+s.getMain().getPressure());
 
                         weatherIcon.setText(Html.fromHtml(setWeatherIcon(s.getWeather().get(0).getId())));
                     }else {
