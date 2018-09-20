@@ -7,6 +7,7 @@ package app.zingo.zingoguest.Utils;
 public interface Constants {
     //public static final String BASE_URL = "http://zingotesting.azurewebsites.net/api/";
     public static final String BASE_URL = "http://zingoapi.azurewebsites.net/api/";
+    public static final String IMAGE_URL = "http://zingoapi.azurewebsites.net/";
 
 
 

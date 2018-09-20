@@ -23,6 +23,15 @@ public class Traveller implements Serializable {
     @SerializedName("LastName")
     private String LastName;
 
+    @SerializedName("Company")
+    private String Company;
+
+    @SerializedName("Gender")
+    private String gender;
+
+    @SerializedName("DOB")
+    private String dob;
+
     @SerializedName("Email")
     private String Email;
 
@@ -41,17 +50,20 @@ public class Traveller implements Serializable {
     @SerializedName("PlaceName")
     private String PlaceName;
 
-    @SerializedName("booking")
-    private Bookings booking;
+    @SerializedName("CustomerGST")
+    private String CustomerGST;
 
-    @SerializedName("BookingId")
-    private int BookingId;
+    @SerializedName("HotelId")
+    private int HotelId;
 
-    @SerializedName("Gender")
-    private String gender;
+    @SerializedName("bookingList")
+    private ArrayList<Bookings> bookingList;
 
-    @SerializedName("DOB")
-    private String dob;
+    @SerializedName("Images")
+    private String Images;
+
+    @SerializedName("Nationality")
+    private String Nationality;
 
     @SerializedName("travellerDocumentsList")
     private ArrayList<TravellerDocuments> travellerDocumentsList;
@@ -136,20 +148,12 @@ public class Traveller implements Serializable {
         PlaceName = placeName;
     }
 
-    public Bookings getBooking() {
-        return booking;
+    public ArrayList<Bookings> getBooking() {
+        return bookingList;
     }
 
-    public void setBooking(Bookings booking) {
-        this.booking = booking;
-    }
-
-    public int getBookingId() {
-        return BookingId;
-    }
-
-    public void setBookingId(int bookingId) {
-        BookingId = bookingId;
+    public void setBooking(ArrayList<Bookings> booking) {
+        this.bookingList = booking;
     }
 
     public String getGender() {
@@ -174,5 +178,53 @@ public class Traveller implements Serializable {
 
     public void setTravellerDocumentsList(ArrayList<TravellerDocuments> travellerDocumentsList) {
         this.travellerDocumentsList = travellerDocumentsList;
+    }
+
+    public String getCompany() {
+        return Company;
+    }
+
+    public void setCompany(String company) {
+        Company = company;
+    }
+
+    public String getCustomerGST() {
+        return CustomerGST;
+    }
+
+    public void setCustomerGST(String customerGST) {
+        CustomerGST = customerGST;
+    }
+
+    public int getHotelId() {
+        return HotelId;
+    }
+
+    public void setHotelId(int hotelId) {
+        HotelId = hotelId;
+    }
+
+    public ArrayList<Bookings> getBookingList() {
+        return bookingList;
+    }
+
+    public void setBookingList(ArrayList<Bookings> bookingList) {
+        this.bookingList = bookingList;
+    }
+
+    public String getImages() {
+        return Images;
+    }
+
+    public void setImages(String images) {
+        Images = images;
+    }
+
+    public String getNationality() {
+        return Nationality;
+    }
+
+    public void setNationality(String nationality) {
+        Nationality = nationality;
     }
 }
