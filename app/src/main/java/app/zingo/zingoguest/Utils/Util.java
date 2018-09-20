@@ -28,7 +28,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Util {
 
     private static Retrofit retrofit = null;
-    private static final int PERMISSION_RESULT = 1;
+    private static final int PERMISSION_RESULT = 1,MY_PERMISSIONS_REQUEST_RESULT = 1;
+
+
 
     public static Retrofit getClient() {
         OkHttpClient client = new OkHttpClient.Builder()
@@ -103,6 +105,8 @@ public class Util {
 
 
     }
+
+
 
 
 

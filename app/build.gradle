@@ -49,14 +49,22 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'com.googlecode.json-simple:json-simple:1.1'
-    //round image
-    implementation 'de.hdodenhof:circleimageview:1.2.1'
 
     //google api
     implementation 'com.google.android.gms:play-services:11.4.2'
     implementation 'com.google.maps.android:android-maps-utils:0.4'
     implementation 'com.google.android.gms:play-services-location:11.4.2'
     implementation 'com.google.android.gms:play-services-awareness:11.4.2'
+
+    //firebase
+    implementation 'com.google.firebase:firebase-auth:11.4.2'
+    implementation 'com.google.firebase:firebase-messaging:11.4.2'
+    implementation 'com.google.firebase:firebase-core:11.4.2'
+
+    //Image
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    //round image
+    implementation 'de.hdodenhof:circleimageview:1.2.1'
 
     //Country code picker
     implementation project(':ccp')
@@ -65,3 +73,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+
+
+
+apply plugin: 'com.google.gms.google-services'

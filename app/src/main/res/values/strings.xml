@@ -36,6 +36,6 @@
     <string name="check_out_choose">Select your new check-out time</string>
 
     <!--Trip Details-->
-    <string name="trip_details_text">Your Trip Details</string>
+    <string name="trip_details_text">Your Booking Details</string>
 
 </resources>
