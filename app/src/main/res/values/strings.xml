@@ -38,4 +38,27 @@
     <!--Trip Details-->
     <string name="trip_details_text">Your Booking Details</string>
 
+    <array name="navbar_items">
+        <!--<item>Home</item>-->
+        <item>Profile</item>
+        <item>Bookings</item>
+        <item>Pending Services</item>
+        <item>Logout</item>
+
+    </array>
+    <array name="navnar_item_images">
+        <item>@drawable/profle_image</item>
+        <item>@drawable/booking_list_icon</item>
+        <item>@drawable/pending_services_icon</item>
+        <item>@drawable/logout</item>
+
+    </array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="pre_booking_request_btn_string">Request for Pre Check-In</string>
+    <string name="total_rooms">Total Rooms: </string>
+    <string name="selected_rooms_string">Selected Room:</string>
+
 </resources>

@@ -28,6 +28,11 @@ public class PreferenceHandler  {
 
     }
 
+    public void clear(){
+        sh.edit().clear().apply();
+
+    }
+
     public void setUserId(int id)
     {
         sh.edit().putInt(Constants.USER_ID,id).apply();

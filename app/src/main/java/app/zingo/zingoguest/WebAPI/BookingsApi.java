@@ -10,6 +10,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by ZingoHotels Tech on 20-09-2018.
@@ -35,7 +36,13 @@ public interface BookingsApi {
     @GET("RoomBookings/GetAllRoomBookingsByTravellerIdAndBookingStatus/{TravellerId}/{BookingStatus}")
     Call<ArrayList<Bookings>>  getBookingsByTravellerIdStatus(@Header("Authorization") String authKey, @Path("TravellerId") int TravellerId, @Path("BookingStatus") String Status);
 
+    @GET("Pagination/GetAllRoomBookingsByTravellerIdAndBookingStatus/{TravellerId}/{BookingStatus}")
+    Call<ArrayList<Bookings>> getBookingsPagingByStatus(@Path("TravellerId") int TravellerId, @Path("BookingStatus") String Status,
+                                                                   @Query("pageNumber") int pageNumber, @Query("_pageSize") int pageSize, @Query("pageSize") int pageSizes);
 
+    @GET("Pagination/GetAllRoomBookingsByTravellerId/{TravellerId}")
+    Call<ArrayList<Bookings>> getBookingsPagingById(@Path("TravellerId") int TravellerId,
+                                                        @Query("pageNumber") int pageNumber, @Query("_pageSize") int pageSize, @Query("pageSize") int pageSizes);
    /* @GET("RoomBooking/GetCustomerFeedBackByBookingId/{BookingId}")
     Call<ArrayList<FeedBack>> getFeedBackByBookingId(@Header("Authorization") String authKey, @Path("BookingId") int BookingId);*/
 

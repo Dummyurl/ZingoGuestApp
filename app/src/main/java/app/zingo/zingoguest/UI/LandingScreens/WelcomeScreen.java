@@ -4,10 +4,12 @@ package app.zingo.zingoguest.UI.LandingScreens;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,8 +37,10 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,14 +59,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import app.zingo.zingoguest.Adapters.NavigationListAdapter;
 import app.zingo.zingoguest.Google.TrackGps;
 import app.zingo.zingoguest.Model.Bookings;
 import app.zingo.zingoguest.Model.HotelDetails;
+import app.zingo.zingoguest.Model.NavBarItems;
 import app.zingo.zingoguest.Model.Rooms;
 import app.zingo.zingoguest.Model.Traveller;
 import app.zingo.zingoguest.Model.WeatherData;
 import app.zingo.zingoguest.R;
+import app.zingo.zingoguest.UI.BookingDetails.BookingHistoryActivity;
+import app.zingo.zingoguest.UI.BookingDetails.MoreBookingsScreen;
 import app.zingo.zingoguest.UI.BookingDetails.TripDetailsScreen;
+import app.zingo.zingoguest.UI.ProfileScreen.ProfileActivity;
+import app.zingo.zingoguest.UI.RoomViews.SelectRoom;
 import app.zingo.zingoguest.Utils.Constants;
 import app.zingo.zingoguest.Utils.PreferenceHandler;
 import app.zingo.zingoguest.Utils.ThreadExecuter;
@@ -83,6 +93,8 @@ import retrofit2.Response;
 
 import com.squareup.picasso.Picasso;
 
+import static android.support.v4.view.GravityCompat.START;
+
 public class WelcomeScreen extends AppCompatActivity {
 
     //Ui declare
@@ -95,7 +107,7 @@ public class WelcomeScreen extends AppCompatActivity {
     private static RelativeLayout mWeatherLayout;
 
     private static CardView mBookingLayout,mSelectRoom,mUpgradeRoom,
-                               mViewBill,mRoomService,mAmenity,mFeedBack;
+                               mViewBill,mRoomService,mAmenity,mFeedBack,mViewBookings;
     private static ImageView mHotelImage;
     private static AppCompatTextView mBookingId,mHotelName,mHotelLocation,mCheckIn,mCheckOut,
                                       mRoomNumText,mRoomNum,mViewDetails;
@@ -104,6 +116,7 @@ public class WelcomeScreen extends AppCompatActivity {
 
     private static CircleImageView mProfileImage;
     private static TextView mUserName;
+    private static ListView navbar;
 
     //GPS
     int MY_PERMISSIONS_REQUEST_RESULT =1;
@@ -140,6 +153,7 @@ public class WelcomeScreen extends AppCompatActivity {
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
+            navbar = (ListView) findViewById(R.id.navbar_list);
             toggle.syncState();
 
             cityField = (TextView)findViewById(R.id.city_field);
@@ -174,8 +188,9 @@ public class WelcomeScreen extends AppCompatActivity {
 
             mProfileImage = (CircleImageView) findViewById(R.id.user_image);
             mUserName = (TextView) findViewById(R.id.user_name);
+            mViewBookings = (CardView) findViewById(R.id.view_more_booking);
 
-
+            setUpNavigationDrawer();
 
             String guestName = PreferenceHandler.getInstance(WelcomeScreen.this).getUserName();
 
@@ -198,6 +213,36 @@ public class WelcomeScreen extends AppCompatActivity {
             weatherIcon.setTypeface(weatherFont);
 
             mWeatherLayout = (RelativeLayout)findViewById(R.id.weather_layout);
+
+            Bundle bundle = getIntent().getExtras();
+            if(bundle!=null){
+                activeBooking =(Bookings)bundle.getSerializable("ActiveBooking");
+            }
+
+            if(activeBooking!=null){
+
+                if(!activeBooking.getBookingStatus().equalsIgnoreCase("Quick")){
+
+                    mSelectRoom.setVisibility(View.GONE);
+
+                }
+                mCheckIn.setText(formatDate(activeBooking.getCheckInDate()));
+                mCheckOut.setText(formatDate(activeBooking.getCheckOutDate()));
+                mBookingId.setText("" + activeBooking.getBookingId());
+                ///System.out.println(bookings1.getHotelId());
+                getHotel(activeBooking.getHotelId());
+                if (activeBooking.getRoomId() != 0) {
+                    getRoomDetails(activeBooking.getRoomId());
+                } else {
+                    //Toast.makeText(WelcomeScreen.this, "You can request for room", Toast.LENGTH_SHORT).show();
+                    mRoomNum.setText("Request for Room");
+                    mRoomNumText.setVisibility(View.GONE);
+                }
+            }else{
+
+                getBookings("Active");
+            }
+
 
             gps = new TrackGps(WelcomeScreen.this);
 
@@ -227,6 +272,13 @@ public class WelcomeScreen extends AppCompatActivity {
                 mWeatherLayout.setVisibility(View.GONE);
             }
 
+            mViewBookings.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent bookings = new Intent(WelcomeScreen.this,MoreBookingsScreen.class);
+                    startActivity(bookings);
+                }
+            });
 
             SimpleDateFormat sdf = new SimpleDateFormat("MMM,yyyy");
             SimpleDateFormat sdfs = new SimpleDateFormat("dd");
@@ -236,7 +288,7 @@ public class WelcomeScreen extends AppCompatActivity {
             currentDate.setText(""+sdfs.format(new Date()));
             currentDay.setText(""+sdfd.format(new Date()));
 
-            getBookings("Active");
+            //getBookings("Active");
 
             mViewBill.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -265,7 +317,7 @@ public class WelcomeScreen extends AppCompatActivity {
 
                     if (profile != null) {
 
-                        Intent edit = new Intent(WelcomeScreen.this, TripDetailsScreen.class);
+                        Intent edit = new Intent(WelcomeScreen.this, ProfileActivity.class);
                         edit.putExtra("Profile",profile);
                         startActivity(edit);
 
@@ -291,6 +343,20 @@ public class WelcomeScreen extends AppCompatActivity {
 
                     }
 
+                }
+            });
+
+            mSelectRoom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Bookings",activeBooking);
+                    bundle.putString("Hotel",mHotelName.getText().toString());
+                    bundle.putString("Locality",mHotelLocation.getText().toString());
+                    Intent bill = new Intent(WelcomeScreen.this, SelectRoom.class);
+                    bill.putExtras(bundle);
+                    startActivity(bill);
                 }
             });
 
@@ -548,6 +614,7 @@ public class WelcomeScreen extends AppCompatActivity {
                                     }else{
 
                                         mBookingLayout.setVisibility(View.GONE);
+                                        mViewBookings.setVisibility(View.GONE);
                                         Toast.makeText(WelcomeScreen.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                                     }
 
@@ -566,6 +633,7 @@ public class WelcomeScreen extends AppCompatActivity {
 
                                 }else{
                                     mBookingLayout.setVisibility(View.GONE);
+                                    mViewBookings.setVisibility(View.GONE);
                                     mRoomLayout.setVisibility(View.GONE);
                                     Toast.makeText(WelcomeScreen.this,"No Bookings found",Toast.LENGTH_SHORT).show();
                                 }
@@ -721,7 +789,7 @@ public class WelcomeScreen extends AppCompatActivity {
 
                                     selectImage();
                                 }else if(image.equalsIgnoreCase("Edit")){
-                                    Intent edit = new Intent(WelcomeScreen.this, TripDetailsScreen.class);
+                                    Intent edit = new Intent(WelcomeScreen.this, ProfileActivity.class);
                                     edit.putExtra("Profile",profile);
                                     startActivity(edit);
                                 }else{
@@ -943,6 +1011,7 @@ public class WelcomeScreen extends AppCompatActivity {
                         }
                         userProfile.setImages(Constants.IMAGE_URL+response.body().toString());
 
+                        System.out.println("User Image = "+userProfile.getImages());
 
                         updateProfile(userProfile);
 
@@ -1168,6 +1237,66 @@ public class WelcomeScreen extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void setUpNavigationDrawer() {
+
+        TypedArray icons = getResources().obtainTypedArray(R.array.navnar_item_images);
+        String[] title  = getResources().getStringArray(R.array.navbar_items);
+
+        final ArrayList<NavBarItems> navBarItemsList = new ArrayList<>();
+
+        for (int i=0;i<title.length;i++)
+        {
+            NavBarItems navbarItem = new NavBarItems(title[i],icons.getResourceId(i, -1));
+            navBarItemsList.add(navbarItem);
+        }
+        //final ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(title));
+        NavigationListAdapter adapter = new NavigationListAdapter(getApplicationContext(),navBarItemsList);
+        navbar.setAdapter(adapter);
+        navbar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                displayView(navBarItemsList.get(position).getTitle());
+            }
+        });
+
+
+
+
+    }
+
+    public void displayView(String i)
+    {
+        if(drawer != null)
+            drawer.closeDrawer(START);
+
+
+        switch (i)
+        {
+            case "Profile":
+                Intent edit = new Intent(WelcomeScreen.this, ProfileActivity.class);
+                edit.putExtra("Profile",profile);
+                startActivity(edit);
+                break;
+
+            case "Bookings":
+                Intent booking = new Intent(WelcomeScreen.this, BookingHistoryActivity.class);
+                startActivity(booking);
+                break;
+
+            case "Pending Services":
+                break;
+
+            case "Logout":
+                PreferenceHandler.getInstance(WelcomeScreen.this).clear();
+                Intent logout = new Intent(WelcomeScreen.this,GuestLoginScreen.class);
+                logout.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                logout.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(logout);
+                break;
+
+        }
     }
 
 }

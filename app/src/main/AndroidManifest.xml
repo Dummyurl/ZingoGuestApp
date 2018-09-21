@@ -32,21 +32,17 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".UI.LandingScreens.SplashScreen"
-            android:theme="@style/AppTheme.NoActionBar" >
-
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".UI.LandingScreens.WelcomeScreen"
+        <activity
+            android:name=".UI.LandingScreens.WelcomeScreen"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar">
-
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -54,22 +50,22 @@
 
         <activity
             android:name=".UI.LandingScreens.GuestLoginScreen"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UI.SelectedBooking.CheckOutAlertScreen"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UI.SelectedBooking.CheckOutExtendScreen"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".UI.BookingDetails.TripDetailsScreen"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UI.BookingDetails.TripDetailsScreen"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UI.ProfileScreen.ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".UI.BookingDetails.BookingHistoryActivity" />
+        <activity android:name=".UI.RoomViews.SelectRoom" />
+        <activity android:name=".UI.BookingDetails.MoreBookingsScreen"></activity>
     </application>
 
 </manifest>

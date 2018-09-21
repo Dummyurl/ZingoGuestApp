@@ -62,6 +62,9 @@ public class Traveller implements Serializable {
     @SerializedName("Images")
     private String Images;
 
+    @SerializedName("Image")
+    private byte[] Image;
+
     @SerializedName("Nationality")
     private String Nationality;
 
@@ -226,5 +229,13 @@ public class Traveller implements Serializable {
 
     public void setNationality(String nationality) {
         Nationality = nationality;
+    }
+
+    public byte[] getImage() {
+        return Image;
+    }
+
+    public void setImage(byte[] image) {
+        Image = image;
     }
 }

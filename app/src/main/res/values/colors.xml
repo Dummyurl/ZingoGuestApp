@@ -9,4 +9,5 @@
     <color name="primary_cloudy">#B93221</color>
     <color name="tealish_primary">#E43F3F</color>
     <color name="text_black">#000000</color>
+    <color name="transparentBlack">#5e000000</color>
 </resources>
