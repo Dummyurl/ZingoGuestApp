@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pre_chckin_alert_title"
+        android:text="@string/pre_check_in_confirm_title"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pre_chckin_alert_message_with_room_number"
+        android:text="@string/pre_check_in_confirm_sub_title"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#565555"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirm_note"
+        android:text="@string/pre_check_in_confirm_note_message"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#565555"
+        android:layout_marginBottom="10dp"/>
+
+</LinearLayout>

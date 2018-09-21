@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,16 +24,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.TreeSet;
 
 import app.zingo.zingoguest.Model.Bookings;
 import app.zingo.zingoguest.Model.HotelDetails;
+import app.zingo.zingoguest.Model.HotelNotification;
+import app.zingo.zingoguest.Model.RoomAvailablity;
+import app.zingo.zingoguest.Model.RoomResponse;
 import app.zingo.zingoguest.Model.Rooms;
 import app.zingo.zingoguest.Model.SelectingRoomModel;
 import app.zingo.zingoguest.R;
 import app.zingo.zingoguest.Utils.Constants;
+import app.zingo.zingoguest.Utils.PreferenceHandler;
 import app.zingo.zingoguest.Utils.ThreadExecuter;
 import app.zingo.zingoguest.Utils.Util;
+import app.zingo.zingoguest.WebAPI.HotelOperations;
+import app.zingo.zingoguest.WebAPI.NotificationAPI;
+import app.zingo.zingoguest.WebAPI.RoomApi;
 import app.zingo.zingoguest.WebAPI.TravellerApi;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,6 +81,7 @@ public class SelectRoom extends AppCompatActivity {
     Bookings bookings;
     String hotelName,hotelPlace;
     int NoOfRooms;
+    Rooms room;
 
 
     @Override
@@ -108,6 +119,7 @@ public class SelectRoom extends AppCompatActivity {
             if(bookings!=null){
                NoOfRooms = bookings.getNoOfRooms();
                mNoOfRooms.setText(""+NoOfRooms);
+                getRooms(bookings.getHotelId());
             }else{
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
@@ -209,7 +221,7 @@ public class SelectRoom extends AppCompatActivity {
                 //System.out.println("selected rooms = "+ mPreBookSelectedRooms.getText().toString());
                 //SelectRoom.this.finish();
                 dialog.dismiss();
-                if(HOTELID != 0)
+                if(bookings.getHotelId() != 0)
                 {
 
                     String roomids = "" ;
@@ -234,9 +246,8 @@ public class SelectRoom extends AppCompatActivity {
                         }
                     }
                     HotelNotification notify = new HotelNotification();
-                    notify.setHotelId(HOTELID);
-                    System.out.println("roomids = "+roomids);
-                    notify.setMessage(roomids+" "+bookingnumber);
+                    notify.setHotelId(bookings.getHotelId());
+                    notify.setMessage(roomids+" "+bookings.getBookingNumber());
                     notify.setTitle("Room Request");
                     notify.setSenderId(Constants.senderId);
                     notify.setServerId(Constants.serverId);
@@ -254,15 +265,14 @@ public class SelectRoom extends AppCompatActivity {
     private void sendfirebaseNotification(final HotelNotification notification) {
 
         final ProgressDialog dialog = new ProgressDialog(SelectRoom.this);
-        dialog.setMessage(getResources().getString(R.string.loader_message));
+        dialog.setMessage("Sending Reques");
         dialog.setCancelable(false);
         dialog.show();
 
         new ThreadExecuter().execute(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Hotel id = "+notification.getHotelId());
-                TravellerApi travellerApi = Util.getClient().create(TravellerApi.class);
+                NotificationAPI travellerApi = Util.getClient().create(NotificationAPI.class);
                 Call<ArrayList<String>> response = travellerApi.sendnotificationToHotel(Constants.auth_string,notification);
 
                 response.enqueue(new Callback<ArrayList<String>>() {
@@ -295,6 +305,99 @@ public class SelectRoom extends AppCompatActivity {
             }
         });
     }
+
+    private void getRooms(final int hotelid){
+        progressDialog = new ProgressDialog(SelectRoom.this);
+        progressDialog.setTitle("please wait..");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+
+        final RoomAvailablity roomAvailablity = new RoomAvailablity();
+        roomAvailablity.setHotelId(bookings.getHotelId());
+        roomAvailablity.setFromDate(bookings.getCheckInDate());
+        roomAvailablity.setToDate(bookings.getCheckOutDate());
+
+        new ThreadExecuter().execute(new Runnable() {
+
+            @Override
+            public void run() {
+
+                HotelOperations apiService =
+                        Util.getClient().create(HotelOperations.class);
+
+                Call<ArrayList<RoomResponse>> call = apiService.getRoomsStatusByHotelId(Constants.auth_string,roomAvailablity)/*getRooms()*/;
+
+                call.enqueue(new Callback<ArrayList<RoomResponse>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<RoomResponse>> call, Response<ArrayList<RoomResponse>> response) {
+
+                        int statusCode = response.code();
+                        if (progressDialog!=null)
+                            progressDialog.dismiss();
+                        if (statusCode == 200) {
+
+                            ArrayList<RoomResponse> list =  response.body();
+                            ArrayList<Rooms> availabe = new ArrayList<>();
+
+
+                            if(list != null && list.size() != 0)
+                            {
+                                rooms = new ArrayList<>();
+                                for(int i=0;i<list.size();i++){
+                                    System.out.println("Room id = "+list.get(i).getRoomId());
+
+                                    getRoomNo(list.get(i).getRoomId());
+
+                                }
+
+                            }
+
+                            if(rooms!=null&&rooms.size()!=0){
+                                Collections.sort(rooms,new SortRooms());
+
+                                selectRoomAdapter(rooms);
+                            }
+
+                        }else {
+                            if (progressDialog!=null)
+                                progressDialog.dismiss();
+                            Toast.makeText(SelectRoom.this, " failed due to status code:"+statusCode, Toast.LENGTH_SHORT).show();
+                        }
+//                callGetStartEnd();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<RoomResponse>> call, Throwable t) {
+                        // Log error here since request failed
+                        if (progressDialog!=null)
+                            progressDialog.dismiss();
+                        Log.e("TAG", t.toString());
+                    }
+                });
+            }
+
+
+        });
+
+
+    }
+
+    class SortRooms implements Comparator<Rooms>
+    {
+
+        @Override
+        public int compare(Rooms o1, Rooms o2) {
+            if(o1 != null && o2 != null)
+            {
+                return (o1.getRoomNo().compareTo(o2.getRoomNo()));
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
     private void selectRoomAdapter(ArrayList<Rooms> hotelRooms){
 
         roomNumberWithFloorsWithFaciltyList = new ArrayList<>();
@@ -303,11 +406,6 @@ public class SelectRoom extends AppCompatActivity {
             String s = room.getDisplayName();
             roomNumberWithFloorsWithFaciltyList.add(new SelectingRoomModel(s,room));
         }
-
-        floorsList = new ArrayList();
-
-
-        featuresList = new ArrayList<>();
 
 
         setGridViewAdapter(roomNumberWithFloorsWithFaciltyList);
@@ -379,31 +477,12 @@ public class SelectRoom extends AppCompatActivity {
             if(rooms.get(position).getIsSelected())
             {
                 preBookingRoomView.setImageResource(R.drawable.opened_door);
-                //linearLayout.setBackgroundColor(Color.parseColor("#757575"));
             }
             else
             {
                 preBookingRoomView.setImageResource(R.drawable.closed_door);
-                //linearLayout.setBackgroundColor(Color.parseColor("#4CAF50"));
             }
-            //System.out.println("room selected = "+rooms.get(position).getIsSelected());
 
-            if(floorNo == null && floorsList.size() == 0)
-            {
-
-                floorsList.add(new DataModel(rooms.get(position).getRooms().getFloor(),false));
-                floorNo = rooms.get(position).getRooms().getFloor();
-            }
-            else
-            {
-                if(floorNo != null && !floorNo.equals(rooms.get(position).getRooms().getFloor()) &&!floorsList.contains(new DataModel(rooms.get(position).getRooms().getFloor(),false)) )//!floorsList.contains(rooms.get(position).getRooms().getFloor()))
-                {
-                    floorsList.add(new DataModel(rooms.get(position).getRooms().getFloor(),false));
-                    floorNo = rooms.get(position).getRooms().getFloor();
-                    //System.out.println("Floor Num=="+floorNo);
-                }
-            }
-            //System.out.println("Position = "+position);
             if(position == (rooms.size() - 1))
             {
                 floorNo = null;
@@ -481,5 +560,38 @@ public class SelectRoom extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public  void getRoomNo(final int i)
+    {
+        room = new Rooms();
+        RoomApi api = Util.getClient().create(RoomApi.class);
+        Call<Rooms> getRoom = api.getRoom(Constants.auth_string,i);
+
+        getRoom.enqueue(new Callback<Rooms>() {
+            @Override
+            public void onResponse(Call<Rooms> call, Response<Rooms> response) {
+                if(response.code() == 200)
+                {
+                    if(response.body() != null)
+                    {
+                       rooms.add(response.body());
+                    }
+
+                }
+                else
+                {
+                    System.out.println(response.message());
+                    room = null;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Rooms> call, Throwable t) {
+                System.out.println(t.getMessage());
+            }
+        });
+
+
     }
 }

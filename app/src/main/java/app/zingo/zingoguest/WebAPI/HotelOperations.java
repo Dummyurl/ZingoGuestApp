@@ -3,6 +3,8 @@ package app.zingo.zingoguest.WebAPI;
 import java.util.ArrayList;
 
 import app.zingo.zingoguest.Model.HotelDetails;
+import app.zingo.zingoguest.Model.RoomAvailablity;
+import app.zingo.zingoguest.Model.RoomResponse;
 import app.zingo.zingoguest.Model.Rooms;
 import app.zingo.zingoguest.Utils.API;
 import retrofit2.Call;
@@ -27,4 +29,7 @@ public interface HotelOperations {
 
     @GET("Hotels/GetRoomsByHotelId/{HotelId}")
     Call<ArrayList<Rooms>> getRoomsByHotelId(@Header("Authorization") String authKey, @Path("HotelId") int HotelId);
+
+    @POST("Agent/GetCategoryAvailabilityByDateAndHotelIdAndFromDate")
+    Call<ArrayList<RoomResponse>> getRoomsStatusByHotelId(@Header("Authorization") String authKey, @Body RoomAvailablity body);
 }
