@@ -58,6 +58,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="pre_booking_request_btn_string">Request for Pre Check-In</string>
+    <string name="room_upgrade_string">Request for Change Room</string>
     <string name="total_rooms">Total Rooms: </string>
     <string name="selected_rooms_string">Selected Room:</string>
     <string name="pre_checkin_alert_title1">Confirm pre check-in</string>
@@ -65,5 +66,7 @@
     <string name="pre_check_in_confirm_title">Your room request has been sent to the hotel successfully</string>
     <string name="pre_check_in_confirm_sub_title">Your selected room number: </string>
     <string name="pre_check_in_confirm_note_message">Please note: It is only a room request, the hotel might give you the same or allocate a different room during the time of checkin at the hotel.</string>
+
+    <string name="change_room">Please note: It is only a room request, the hotel might give you the same or allocate a different room</string>
 
 </resources>

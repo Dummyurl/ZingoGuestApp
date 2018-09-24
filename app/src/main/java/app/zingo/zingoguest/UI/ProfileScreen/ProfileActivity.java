@@ -31,7 +31,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import app.zingo.zingoguest.CustomViews.CustomFontTextView;
+import app.zingo.zingoguest.Model.Bookings;
+import app.zingo.zingoguest.Model.SearchBooking;
 import app.zingo.zingoguest.Model.Traveller;
 import app.zingo.zingoguest.R;
 import app.zingo.zingoguest.UI.LandingScreens.GuestLoginScreen;
@@ -40,6 +44,7 @@ import app.zingo.zingoguest.Utils.Permission;
 import app.zingo.zingoguest.Utils.PreferenceHandler;
 import app.zingo.zingoguest.Utils.ThreadExecuter;
 import app.zingo.zingoguest.Utils.Util;
+import app.zingo.zingoguest.WebAPI.BookingsApi;
 import app.zingo.zingoguest.WebAPI.TravellerApi;
 import app.zingo.zingoguest.WebAPI.UploadApi;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,12 +61,15 @@ public class ProfileActivity extends AppCompatActivity {
     LinearLayout mEditProfile;
     CircleImageView mTravellerImage;
     ImageView mBanner,mBack;
+    CustomFontTextView mConfirmBooking,mCancelBooking,mUpcomingBooking,mTotalBookings;
 
 
 
     Traveller Traveller;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     String status,selectedImage;
+
+    int mConfirm=0,mCancelled=0,mUpcoming=0,count=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +89,11 @@ public class ProfileActivity extends AppCompatActivity {
             mBanner = (ImageView) findViewById(R.id.header_cover_image);
             mBack = (ImageView) findViewById(R.id.back_button);
 
+            mConfirmBooking = (CustomFontTextView)findViewById(R.id.total_confirm_booking);
+            mCancelBooking = (CustomFontTextView)findViewById(R.id.total_cancel_booking);
+            mUpcomingBooking = (CustomFontTextView)findViewById(R.id.total_upcoming_booking);
+            mTotalBookings = (CustomFontTextView)findViewById(R.id.total_bookings);
+
             Bundle bundle = getIntent().getExtras();
 
             if(bundle!=null){
@@ -88,6 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Traveller = (Traveller) bundle.getSerializable("Profile");
             }else{
                 getProfile(PreferenceHandler.getInstance(ProfileActivity.this).getUserId());
+
             }
 
             if(Traveller!=null){
@@ -188,6 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         try{
 
+            getBookings(PreferenceHandler.getInstance(ProfileActivity.this).getUserId());
             if(profile.getFirstName()!=null){
                 mUserName.setText(""+profile.getFirstName());
             }
@@ -617,5 +632,72 @@ public class ProfileActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void getBookings(final  int travellerId) {
+
+
+        new ThreadExecuter().execute(new Runnable() {
+            @Override
+            public void run() {
+                BookingsApi bookingApi = Util.getClient().create(BookingsApi.class);
+                Call<ArrayList<Bookings>> getBooking = bookingApi.getBookingsByTravellerId(Constants.auth_string,travellerId);
+                getBooking.enqueue(new Callback<ArrayList<Bookings>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<Bookings>> call, Response<ArrayList<Bookings>> response) {
+
+                        if(response.code() == 200)
+                        {
+                            try{
+
+                                int bookingCount =0;
+                                if(response.body() != null)
+                                {
+                                    System.out.println("Success "+response.body());
+                                /*response.body().get(0).get*/
+                                    if(response.body().size()!=0){
+                                        count =1;
+
+                                    }
+                                    for(int i=0;i<response.body().size();i++){
+                                        bookingCount = bookingCount+1;
+                                        System.out.println("Booking Count ="+bookingCount);
+                                        if(response.body().get(i).getBookingStatus().equalsIgnoreCase("Completed")){
+                                            mConfirm = mConfirm + 1;
+                                        }else if(response.body().get(i).getBookingStatus().equalsIgnoreCase("Cancelled")){
+                                            mCancelled = mCancelled + 1;
+                                        }else if(response.body().get(i).getBookingStatus().equalsIgnoreCase("Delay")||response.body().get(i).getBookingStatus().equalsIgnoreCase("Quick")){
+                                            mUpcoming = mUpcoming + 1;
+                                        }
+                                        //getDetails(response.body().get(i).getBookingId(),bookingCount);
+                                    }
+
+                                    mConfirmBooking.setText(""+mConfirm);
+                                    mCancelBooking.setText(""+mCancelled);
+                                    mUpcomingBooking.setText(""+mUpcoming);
+                                    mTotalBookings.setText(""+response.body().size());
+                                }else{
+                                    Toast.makeText(ProfileActivity.this, "There is no booking for this traveller", Toast.LENGTH_SHORT).show();
+                                    count = 0;
+
+                                }
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ArrayList<Bookings>> call, Throwable t) {
+
+                        Toast.makeText(ProfileActivity.this,"Fail",Toast.LENGTH_LONG);
+
+                    }
+                });
+            }
+        });
+
+
     }
 }

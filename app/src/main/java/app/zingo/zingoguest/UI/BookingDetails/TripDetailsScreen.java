@@ -1,5 +1,6 @@
 package app.zingo.zingoguest.UI.BookingDetails;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -11,17 +12,29 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
+import app.zingo.zingoguest.Adapters.PaymentsAdapter;
+import app.zingo.zingoguest.Adapters.ServicesAdapter;
 import app.zingo.zingoguest.Model.Bookings;
+import app.zingo.zingoguest.Model.HotelNotification;
 import app.zingo.zingoguest.R;
+import app.zingo.zingoguest.Utils.Constants;
 import app.zingo.zingoguest.Utils.PreferenceHandler;
+import app.zingo.zingoguest.Utils.ThreadExecuter;
+import app.zingo.zingoguest.Utils.Util;
+import app.zingo.zingoguest.WebAPI.NotificationAPI;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TripDetailsScreen extends AppCompatActivity {
 
@@ -33,8 +46,10 @@ public class TripDetailsScreen extends AppCompatActivity {
 
     private static TextView mmTravellerName,mBookingNumber,mDurationOfStay,mDurationLeft,
             mCIT,mCOT, mPaxDetails,mPaidAmount,mRemainingAmount,mTotalAmount,mTotalBalance,
-            mTotalPaid,mPreBookHotelName,
-            mPreHotelPlace,mTotalRoomBalance,mTotalRoom;
+            mTotalPaid,mPreBookHotelName,mNoPaymentData,mNoServiceData,
+            mPreHotelPlace,mTotalRoomBalance,mTotalRoom,mViewBreakUp;
+    private static LinearLayout mPaymentBreakUp;
+    RecyclerView mDetailedPaymentLists,mDetailedServiceLists;
 
     //Intent
     Bookings bookings;
@@ -66,6 +81,14 @@ public class TripDetailsScreen extends AppCompatActivity {
             mOther = (AppCompatTextView)findViewById(R.id.other_charge);
             mTotal = (AppCompatTextView)findViewById(R.id.total_charge);*/
 
+            mRoomChargeDesc = (AppCompatTextView)findViewById(R.id.room_charge);
+            mRoomChargeValue = (AppCompatTextView)findViewById(R.id.room_charge_value);
+            mRoomCharge = (AppCompatTextView)findViewById(R.id.room_charge_value_text);
+            mGstPercentage = (AppCompatTextView)findViewById(R.id.gst_value);
+            mGstValue = (AppCompatTextView)findViewById(R.id.gst_amount);
+            mGST = (AppCompatTextView)findViewById(R.id.gst_amount_text);
+            mOther = (AppCompatTextView)findViewById(R.id.other_charge);
+
             mBack = (ImageView)findViewById(R.id.back);
             mCheckIn = (AppCompatTextView)findViewById(R.id.check_in_date);
             mCheckOut = (AppCompatTextView)findViewById(R.id.check_out);
@@ -84,10 +107,16 @@ public class TripDetailsScreen extends AppCompatActivity {
             mBookingNumber= (TextView) findViewById(R.id.booking_num);
 
             mTotalAmount = (TextView) findViewById(R.id.total_amount_info);
-            mTotalBalance = (TextView) findViewById(R.id.balance_amount_info);
-            mTotalRoomBalance = (TextView) findViewById(R.id.details_room_balance);
+            mTotalRoomBalance = (TextView) findViewById(R.id.balance_amount_info);
+            mTotalBalance = (TextView) findViewById(R.id.details_room_balance);
             mTotalPaid = (TextView) findViewById(R.id.paid_amount_info);
 
+            mPaymentBreakUp = (LinearLayout) findViewById(R.id.payment_break_up);
+            mNoPaymentData = (TextView) findViewById(R.id.no_payment_data);
+            mNoServiceData = (TextView) findViewById(R.id.no_service_data);
+            mViewBreakUp = (TextView) findViewById(R.id.view_break_up);
+            mDetailedPaymentLists = (RecyclerView) findViewById(R.id.detailed_payments_lists);
+            mDetailedServiceLists = (RecyclerView) findViewById(R.id.detailed_services_lists);
 
             Bundle bundle = getIntent().getExtras();
 
@@ -123,6 +152,38 @@ public class TripDetailsScreen extends AppCompatActivity {
                 }
             });
 
+            mCheckOutBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // updateBooking(bookingData,"Completed");
+                    HotelNotification notify = new HotelNotification();
+                    System.out.println(bookings.getHotelId());
+                    notify.setHotelId(bookings.getHotelId());
+                    //System.out.println("roomids = "+roomids);
+                    notify.setMessage(bookings.getBookingId()+"");
+                    notify.setTitle("Checkout Request");
+                    notify.setSenderId(Constants.senderId);
+                    notify.setServerId(Constants.serverId);
+                    sendcheckouteNotification(notify);
+
+                }
+            });
+
+            mViewBreakUp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    if(mPaymentBreakUp.getVisibility()==View.GONE){
+                        mPaymentBreakUp.setVisibility(View.VISIBLE);
+                        mViewBreakUp.setText("Hide Payment Breakup");
+                    }else{
+                        mPaymentBreakUp.setVisibility(View.GONE);
+                        mViewBreakUp.setText("Show Payment Breakup");
+                    }
+                }
+            });
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -152,8 +213,67 @@ public class TripDetailsScreen extends AppCompatActivity {
             mCOT.setText(""+bookings.getCheckOutTime());
         }
 
-        int durationStay = duration(bookings.getCheckInTime(),bookings.getCheckInDate(),bookings.getCheckOutTime(),bookings.getCheckOutDate());
+      //  int durationStay = duration(bookings.getCheckInTime(),bookings.getCheckInDate(),bookings.getCheckOutTime(),bookings.getCheckOutDate());
         mTotalAmount.setText("₹"+df.format(bookings.getTotalAmount()));
+
+        int total = bookings.getTotalAmount();
+        int balance = bookings.getBalanceAmount();
+
+        mTotalBalance.setText("₹ "+df.format(bookings.getBalanceAmount()));
+        mTotalPaid.setText("₹ "+df.format((total-balance)));
+
+        if(bookings.getPaymentList() != null &&
+                bookings.getPaymentList().size() != 0)
+        {
+            mNoPaymentData.setVisibility(View.GONE);
+            mDetailedPaymentLists.setVisibility(View.VISIBLE);
+            PaymentsAdapter sadapter = new PaymentsAdapter(TripDetailsScreen.this,
+                    bookings.getPaymentList());
+            mDetailedPaymentLists.setAdapter(sadapter);
+        }
+        else
+        {
+            mNoPaymentData.setVisibility(View.VISIBLE);
+            mDetailedPaymentLists.setVisibility(View.GONE);
+        }
+
+        if(bookings.getServicesList() != null &&
+                bookings.getServicesList().size() != 0)
+        {
+            mNoServiceData.setVisibility(View.GONE);
+            mDetailedServiceLists.setVisibility(View.VISIBLE);
+            ServicesAdapter sadapter = new ServicesAdapter(TripDetailsScreen.this,bookings.getServicesList());
+            mDetailedServiceLists.setAdapter(sadapter);
+        }
+        else
+        {
+            mNoServiceData.setVisibility(View.VISIBLE);
+            mDetailedServiceLists.setVisibility(View.GONE);
+        }
+
+        mRoomChargeDesc.setText("("+bookings.getNoOfRooms()+" room(s) × "+bookings.getDurationOfStay()+" night(s)");
+        mRoomChargeValue.setText("₹ "+df.format(bookings.getSellRate()));
+
+        int sellRate = bookings.getSellRate();
+        int durationStay = duration(bookings.getCheckInTime(),bookings.getCheckInDate(),bookings.getCheckOutTime(),bookings.getCheckOutDate());
+
+        int noOfRooms = bookings.getNoOfRooms();
+
+        if(durationStay==0||noOfRooms==0){
+            mRoomCharge.setText("( ₹"+df.format(sellRate)+"/per night)");
+            if(noOfRooms==0){
+                noOfRooms=1;
+            }
+        }else{
+            int price = sellRate/(durationStay * noOfRooms);
+            mRoomCharge.setText("( ₹"+df.format(price)+"/per night)");
+        }
+
+        mGstPercentage.setText("("+bookings.getGst()+"%)");
+        mGstValue.setText("₹"+df.format(bookings.getGstAmount()));
+        mGST.setText("(₹"+df.format(bookings.getGstAmount())+"×"+noOfRooms+"×"+durationStay+")");
+        mOther.setText("₹"+df.format(bookings.getExtraCharges()));
+
 
        /* mBookingId.setText("Booking Id: " + bookings.getBookingId());
         mRoomType.setText(""+bookings.getRoomCategory());
@@ -330,6 +450,51 @@ public class TripDetailsScreen extends AppCompatActivity {
         return durationStay;
     }
 
+    private void sendcheckouteNotification(final HotelNotification notification) {
+
+        final ProgressDialog dialog = new ProgressDialog(TripDetailsScreen.this);
+        dialog.setMessage("Sending Request..");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        new ThreadExecuter().execute(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Hotel id = "+notification.getHotelId());
+                NotificationAPI travellerApi = Util.getClient().create(NotificationAPI.class);
+                Call<ArrayList<String>> response = travellerApi.sendnotificationToHotel(Constants.auth_string,notification);
+
+                response.enqueue(new Callback<ArrayList<String>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<String>> call, Response<ArrayList<String>> response) {
+
+                        if(dialog != null)
+                        {
+                            dialog.dismiss();
+                        }
+                        if(response.code() == 200)
+                        {
+                            if(response.body() != null)
+                            {
+                                Toast.makeText(TripDetailsScreen.this,"Checkout request sent to hotel",Toast.LENGTH_SHORT).show();
+
+                                //intent();
+                                //SelectRoom.this.finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<String>> call, Throwable t) {
+                        if(dialog != null)
+                        {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
 
 }

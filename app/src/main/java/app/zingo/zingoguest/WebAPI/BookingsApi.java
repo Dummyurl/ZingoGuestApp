@@ -9,6 +9,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -45,5 +46,9 @@ public interface BookingsApi {
                                                         @Query("pageNumber") int pageNumber, @Query("_pageSize") int pageSize, @Query("pageSize") int pageSizes);
    /* @GET("RoomBooking/GetCustomerFeedBackByBookingId/{BookingId}")
     Call<ArrayList<FeedBack>> getFeedBackByBookingId(@Header("Authorization") String authKey, @Path("BookingId") int BookingId);*/
+
+    @PUT("RoomBookings/{id}")
+    Call<String> updateBookingStatus(@Header("Authorization") String authKey,@Path("id") int id, @Body Bookings bookings1);
+
 
 }

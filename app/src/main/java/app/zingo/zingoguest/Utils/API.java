@@ -11,6 +11,7 @@ public class API {
 
     //Rooms
     public static final String ROOMS = "Rooms";
+    public static final String ROOM_CATEGORIES = "RoomCategories";
 
     //Gst
     public static final String GET_GST_DETAILS_BY_HOTEL_ID = "Hotels/GetGSTDetailsByHotelId";

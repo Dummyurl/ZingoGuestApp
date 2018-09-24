@@ -32,7 +32,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".UI.LandingScreens.SplashScreen"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +43,8 @@
         <activity
             android:name=".UI.LandingScreens.WelcomeScreen"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -50,22 +52,64 @@
 
         <activity
             android:name=".UI.LandingScreens.GuestLoginScreen"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.SelectedBooking.CheckOutAlertScreen"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.SelectedBooking.CheckOutExtendScreen"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.BookingDetails.TripDetailsScreen"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.ProfileScreen.ProfileActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".UI.BookingDetails.BookingHistoryActivity" />
-        <activity android:name=".UI.RoomViews.SelectRoom" />
-        <activity android:name=".UI.BookingDetails.MoreBookingsScreen"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".Google.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Google.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <activity android:name=".UI.BookingDetails.BookingHistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.RoomViews.SelectRoom"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.BookingDetails.MoreBookingsScreen"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.RoomViews.UpgradeRoom"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.RoomViews.RoomServicesScreen"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.RoomViews.ServicesListActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.RoomViews.AmenityScreen"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.RoomViews.FeedBackScreen"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.BookingDetails.PendingServices"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.BookingDetails.RoomServicePendingListActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.BookingDetails.BookingDetailsScreen"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.BookingDetails.RoomServiceAcceptanceReportActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.BookingDetails.RoomAcceptanceActivtiy"
+            android:screenOrientation="portrait" ></activity>
     </application>
 
 </manifest>

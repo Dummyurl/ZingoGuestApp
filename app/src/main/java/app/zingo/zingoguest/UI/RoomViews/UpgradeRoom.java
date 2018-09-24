@@ -3,9 +3,11 @@ package app.zingo.zingoguest.UI.RoomViews;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,43 +19,40 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.TreeSet;
 
+import app.zingo.zingoguest.Adapters.ChangeRoomAdapter;
+import app.zingo.zingoguest.CustomViews.RecyclerTouchListener;
 import app.zingo.zingoguest.Model.Bookings;
-import app.zingo.zingoguest.Model.HotelDetails;
 import app.zingo.zingoguest.Model.HotelNotification;
 import app.zingo.zingoguest.Model.RoomAvailablity;
+import app.zingo.zingoguest.Model.RoomCategories;
 import app.zingo.zingoguest.Model.RoomResponse;
 import app.zingo.zingoguest.Model.Rooms;
 import app.zingo.zingoguest.Model.SelectingRoomModel;
 import app.zingo.zingoguest.R;
 import app.zingo.zingoguest.Utils.Constants;
-import app.zingo.zingoguest.Utils.PreferenceHandler;
 import app.zingo.zingoguest.Utils.ThreadExecuter;
 import app.zingo.zingoguest.Utils.Util;
 import app.zingo.zingoguest.WebAPI.HotelOperations;
 import app.zingo.zingoguest.WebAPI.NotificationAPI;
 import app.zingo.zingoguest.WebAPI.RoomApi;
-import app.zingo.zingoguest.WebAPI.TravellerApi;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SelectRoom extends AppCompatActivity {
+public class UpgradeRoom extends AppCompatActivity {
 
     //View
     private Button mPreCheckInBtn;
     private LinearLayout mNoRoomsMatching;
     private TextView mPreBookHotelName,mPreHotelPlace;
+    private RecyclerView mChangeRoomRecyclerview;
 
 
     private ProgressDialog progressDialog;
@@ -62,13 +61,14 @@ public class SelectRoom extends AppCompatActivity {
     public ArrayList<SelectingRoomModel> roomNumberWithFloorsWithFaciltyList;
 
 
-    private GridView roomsGridView;
     private TextView mSelectedRoomNumber,mNoOfRooms;
 
     //String selectedRoomNumber = "";
     public int count=0;
     public String preBookingSelectedRoomNumber="";
     ArrayList<SelectingRoomModel> filteredRooms;
+    ArrayList<String> categoryNames;
+    ArrayList<ArrayList<SelectingRoomModel>> arrayListArrayList;
 
     //Intent
     Bookings bookings;
@@ -76,6 +76,8 @@ public class SelectRoom extends AppCompatActivity {
     int NoOfRooms;
     Rooms room;
 
+    ChangeRoomAdapter.ViewHolder viewHolder;
+    String upgradeselectedRoomId="",upgradeRoomNo = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +85,14 @@ public class SelectRoom extends AppCompatActivity {
 
         try{
 
-            setContentView(R.layout.activity_select_room);
+            setContentView(R.layout.activity_upgrade_room);
 
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            setTitle("Select Room");
+            setTitle("Upgrade Room");
 
             //mSelectFloors = (LinearLayout)findViewById(R.id.pre_book_select_floors);
             //mSelectFeatures= (RelativeLayout) findViewById(R.id.pre_book_select_featurs);
-            roomsGridView = (GridView) findViewById(R.id.pre_booking_room_grid_view);
             mSelectedRoomNumber = (TextView) findViewById(R.id.pre_book_selected_room_numbers);
             mNoOfRooms = (TextView) findViewById(R.id.pre_book_total_room_number);
             mPreCheckInBtn = (Button) findViewById(R.id.request_for_pre_booking_btn);
@@ -99,6 +100,7 @@ public class SelectRoom extends AppCompatActivity {
             // mPreBookSelectedRooms = (TextView) findViewById(R.id.pre_book_selected_room_numbers);
             mPreBookHotelName = (TextView) findViewById(R.id.pre_book_hotel_name);
             mPreHotelPlace = (TextView) findViewById(R.id.pre_book_hotel_city);
+            mChangeRoomRecyclerview = (RecyclerView) findViewById(R.id.change_room_recycler_view);
 
             Bundle bundle = getIntent().getExtras();
 
@@ -110,9 +112,9 @@ public class SelectRoom extends AppCompatActivity {
             }
 
             if(bookings!=null){
-               NoOfRooms = bookings.getNoOfRooms();
-               mNoOfRooms.setText(""+NoOfRooms);
-                getRooms(bookings.getHotelId());
+                NoOfRooms = bookings.getNoOfRooms();
+                mNoOfRooms.setText(""+NoOfRooms);
+                getRooms();
             }else{
                 Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
@@ -128,41 +130,84 @@ public class SelectRoom extends AppCompatActivity {
                 mPreHotelPlace.setText("");
             }
 
-
-            roomsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mChangeRoomRecyclerview.addOnItemTouchListener(new RecyclerTouchListener(UpgradeRoom.this, mChangeRoomRecyclerview, new RecyclerTouchListener.ClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                public void onClick(View view, final int position) {
 
-                    if(NoOfRooms != 0)
-                    {
-                        if(filteredRooms != null && !filteredRooms.isEmpty())
-                        {
-                           setImage(filteredRooms,position);
+                    viewHolder  = (ChangeRoomAdapter.ViewHolder) mChangeRoomRecyclerview.findViewHolderForAdapterPosition(position);
+                    viewHolder.gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+                            ArrayList<SelectingRoomModel> list = arrayListArrayList.get(position);
+                            SelectingRoomModel s = list.get(pos);
+                        /*System.out.println("selected room = "+s.getSelectingRoom());*/
+                            if(!s.getIsSelected())
+                            {
+                                count++;
+                                LinearLayout linearLayout = (LinearLayout) viewHolder.gridview.getChildAt(pos);
+
+                                LinearLayout linearLayout1 = (LinearLayout) linearLayout.getChildAt(0);
+                                ImageView imageView = (ImageView) linearLayout1.getChildAt(0);
+                                imageView.setImageResource(R.drawable.opened_door);
+                                s.setIsSelected(true);
+                                upgradeselectedRoomId = upgradeselectedRoomId+s.getRooms().getRoomId()+",";
+                                upgradeRoomNo = upgradeRoomNo+s.getRooms().getRoomNo()+",";
+                                mSelectedRoomNumber.setText(""+upgradeRoomNo);
+
+                            }
+                            else
+                            {
+                                count--;
+                                LinearLayout linearLayout = (LinearLayout) viewHolder.gridview.getChildAt(pos);
+                                LinearLayout linearLayout1 = (LinearLayout) linearLayout.getChildAt(0);
+                                ImageView imageView = (ImageView) linearLayout1.getChildAt(0);
+                                imageView.setImageResource(R.drawable.closed_door);
+                                s.setIsSelected(false);
+                                upgradeselectedRoomId = upgradeselectedRoomId.replace(s.getRooms().getRoomId()+",","");
+                                upgradeRoomNo = upgradeRoomNo.replace(s.getRooms().getRoomNo()+",","");
+                                mSelectedRoomNumber.setText(""+upgradeRoomNo);
+                            }
                         }
-                        else
-                        {
-                           setImage(roomNumberWithFloorsWithFaciltyList,position);
-                        }
-                    }
+                    });
                 }
-            });
+
+                @Override
+                public void onLongClick(View view, int position) {
+
+                }
+            }));
+
 
             mPreCheckInBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-
-                    if(count == NoOfRooms)
+                    if(NoOfRooms ==0)
                     {
-                        showCheckInAlertBox1();
+                        if(count < 1)
+                        {
+                            Toast.makeText(UpgradeRoom.this,"Please select room",Toast.LENGTH_SHORT).show();
+                        }
+                        else if(count == 1)
+                        {
+                            showAlertBox(upgradeRoomNo);
+                            //System.out.println("upgradeRoomNo = "+upgradeRoomNo);
+                        }
+                        else
+                        {
+                            Toast.makeText(UpgradeRoom.this,"Please select only one room",Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    else if(NoOfRooms < count)
+                    else
                     {
-                        Toast.makeText(SelectRoom.this,"Sorry. You have selected more rooms",Toast.LENGTH_SHORT).show();
-                    }
-                    else if(count < NoOfRooms)
-                    {
-                        Toast.makeText(SelectRoom.this,"Sorry. You need to select "+(NoOfRooms-count)+" more rooms",Toast.LENGTH_SHORT).show();
+                        if(NoOfRooms != count)
+                        {
+                            Toast.makeText(UpgradeRoom.this,"Please select only "+NoOfRooms+" room",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            showAlertBox(upgradeRoomNo);
+                        }
                     }
                 }
             });
@@ -176,7 +221,7 @@ public class SelectRoom extends AppCompatActivity {
 
     public void showCheckInAlertBox1()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SelectRoom.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(UpgradeRoom.this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = (View) inflater.inflate(R.layout.pre_checkin_alert_box1,null);
         builder.setView(v);
@@ -200,7 +245,7 @@ public class SelectRoom extends AppCompatActivity {
     }
     public void showCheckInAlertBox2()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SelectRoom.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(UpgradeRoom.this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = (View) inflater.inflate(R.layout.pre_checkin_alert_box2,null);
         TextView selectedRoomsAlertTextView = (TextView) v.findViewById(R.id.pre_chckin_alert_message_with_room_number);
@@ -212,7 +257,7 @@ public class SelectRoom extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 //System.out.println("selected rooms = "+ mPreBookSelectedRooms.getText().toString());
-                //SelectRoom.this.finish();
+                //UpgradeRoom.this.finish();
                 dialog.dismiss();
                 if(bookings.getHotelId() != 0)
                 {
@@ -257,7 +302,7 @@ public class SelectRoom extends AppCompatActivity {
 
     private void sendfirebaseNotification(final HotelNotification notification) {
 
-        final ProgressDialog dialog = new ProgressDialog(SelectRoom.this);
+        final ProgressDialog dialog = new ProgressDialog(UpgradeRoom.this);
         dialog.setMessage("Sending Reques");
         dialog.setCancelable(false);
         dialog.show();
@@ -280,9 +325,9 @@ public class SelectRoom extends AppCompatActivity {
                         {
                             if(response.body() != null)
                             {
-                                Toast.makeText(SelectRoom.this,"Thank you for selecting room. Your request has been sent to hotel. " +
+                                Toast.makeText(UpgradeRoom.this,"Thank you for selecting room. Your request has been sent to hotel. " +
                                         "Please wait for there reply.",Toast.LENGTH_SHORT).show();
-                                SelectRoom.this.finish();
+                                UpgradeRoom.this.finish();
                             }
                         }
                     }
@@ -299,8 +344,8 @@ public class SelectRoom extends AppCompatActivity {
         });
     }
 
-    private void getRooms(final int hotelid){
-        progressDialog = new ProgressDialog(SelectRoom.this);
+    private void getRooms(){
+        progressDialog = new ProgressDialog(UpgradeRoom.this);
         progressDialog.setTitle("please wait..");
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -331,28 +376,50 @@ public class SelectRoom extends AppCompatActivity {
                         if (statusCode == 200) {
 
                             ArrayList<RoomResponse> list =  response.body();
-                            ArrayList<Rooms> availabe = new ArrayList<>();
+                            ArrayList<RoomResponse> availabe = new ArrayList<>();
 
 
                             if(list != null && list.size() != 0)
                             {
-                                rooms =  new ArrayList<>();
-                                for(int i=0;i<list.size();i++){
+                                rooms = list;
+                                Collections.sort(rooms,new UpgradeRoom.SortRooms());
+                                categoryNames = new ArrayList<>();
 
-                                    if(list.get(i).getCategoryName().equalsIgnoreCase(bookings.getRoomCategory())){
-
-                                        rooms.add(list.get(i));
+                                for (int i=0;i<rooms.size();i++)
+                                {
+                                    //System.out.println(availabe.get(i).getRoomCategoryId());
+                                    if(!categoryNames.contains(rooms.get(i).getCategoryName()))
+                                    {
+                                        categoryNames.add(rooms.get(i).getCategoryName());
                                     }
                                 }
 
-                                if(rooms!=null&&rooms.size()!=0){
-                                    Collections.sort(rooms,new SortRooms());
 
-                                    selectRoomAdapter(rooms);
+                                arrayListArrayList = new ArrayList<>();
+                                for (int i = 0;i<categoryNames.size();i++)
+                                {
+                                    ArrayList<SelectingRoomModel> roomsArrayList = new ArrayList<>();
+                                    for (int j=0;j<rooms.size();j++)
+                                    {
+                                        if(categoryNames.get(i).equalsIgnoreCase(rooms.get(j).getCategoryName()))
+                                        {
+                                            roomsArrayList.add(new SelectingRoomModel(rooms.get(j).getRoomNo(),rooms.get(j)));
+                                        }
+
+                                    }
+
+                                    arrayListArrayList.add(roomsArrayList);
+                                }
+
+                                if(arrayListArrayList!=null&&arrayListArrayList.size()!=0){
+
+                                    ChangeRoomAdapter adapter = new ChangeRoomAdapter(UpgradeRoom.this,arrayListArrayList,categoryNames);
+                                    mChangeRoomRecyclerview.setAdapter(adapter);
+
+
                                 }else{
 
                                     mNoRoomsMatching.setVisibility(View.VISIBLE);
-                                    roomsGridView.setVisibility(View.GONE);
                                 }
 
 
@@ -360,7 +427,6 @@ public class SelectRoom extends AppCompatActivity {
 
                             }else {
                                 mNoRoomsMatching.setVisibility(View.VISIBLE);
-                                roomsGridView.setVisibility(View.GONE);
 
                             }
 
@@ -369,7 +435,7 @@ public class SelectRoom extends AppCompatActivity {
                         }else {
                             if (progressDialog!=null)
                                 progressDialog.dismiss();
-                            Toast.makeText(SelectRoom.this, " failed due to status code:"+statusCode, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpgradeRoom.this, " failed due to status code:"+statusCode, Toast.LENGTH_SHORT).show();
                         }
 //                callGetStartEnd();
                     }
@@ -405,46 +471,20 @@ public class SelectRoom extends AppCompatActivity {
             }
         }
     }
-    private void selectRoomAdapter(ArrayList<RoomResponse> hotelRooms){
-
-        roomNumberWithFloorsWithFaciltyList = new ArrayList<>();
-        for(RoomResponse room:hotelRooms/*getResources().getStringArray(R.array.hotel_rooms_with_floors_features)*/)
-        {
-            String s = room.getRoomNo();
-            roomNumberWithFloorsWithFaciltyList.add(new SelectingRoomModel(s,room));
-        }
 
 
-        setGridViewAdapter(roomNumberWithFloorsWithFaciltyList);
-    }
 
-    private void setGridViewAdapter(ArrayList<SelectingRoomModel> gridViewData)
-    {
-
-        if(gridViewData != null && gridViewData.size() != 0)
-        {
-            mNoRoomsMatching.setVisibility(View.GONE);
-            roomsGridView.setVisibility(View.VISIBLE);
-            SelectRoomGridViewAdapter adapter = new SelectRoomGridViewAdapter(SelectRoom.this,gridViewData);
-            roomsGridView.setAdapter(adapter);
-        }
-        else
-        {
-            mNoRoomsMatching.setVisibility(View.VISIBLE);
-            roomsGridView.setVisibility(View.GONE);
-        }
-    }
 
     //gridview adapter
 
-    class SelectRoomGridViewAdapter extends BaseAdapter {
+    class UpgradeRoomGridViewAdapter extends BaseAdapter {
 
         Context context;
         ArrayList<SelectingRoomModel> rooms;
         String floorNo = null;
 
         boolean roomSelected = true;
-        public SelectRoomGridViewAdapter(Context context, ArrayList<SelectingRoomModel> rooms)
+        public UpgradeRoomGridViewAdapter(Context context, ArrayList<SelectingRoomModel> rooms)
         {
             this.context = context;
             this.rooms = rooms;
@@ -503,56 +543,7 @@ public class SelectRoom extends AppCompatActivity {
     }
 
 
-    public void setImage(ArrayList<SelectingRoomModel> data, int position)
-    {
 
-        String[] splitedString = data.get(position).getSelectingRoom().split("-");
-        String splitedCombinedString = splitedString[0];
-        boolean b = data.get(position).getIsSelected();
-        if (!data.get(position).getIsSelected()) {
-
-            count++;
-            SelectingRoomModel model = data.get(position);
-            LinearLayout linearLayout = (LinearLayout) roomsGridView.getChildAt(position);
-            LinearLayout linearLayout1 = (LinearLayout) linearLayout.getChildAt(0);
-            ImageView imageView = (ImageView) linearLayout1.getChildAt(0);
-
-            for (int i = 0; i < roomNumberWithFloorsWithFaciltyList.size(); i++) {
-
-                if (roomNumberWithFloorsWithFaciltyList.get(i).getSelectingRoom().contains(splitedCombinedString) &&
-                        !roomNumberWithFloorsWithFaciltyList.get(i).getIsSelected()) {
-                    roomNumberWithFloorsWithFaciltyList.get(i).isSelected = true;
-
-                    preBookingSelectedRoomNumber = preBookingSelectedRoomNumber + splitedString[0] + ",";
-                    mSelectedRoomNumber.setText(preBookingSelectedRoomNumber);
-                    imageView.setImageResource(R.drawable.opened_door);
-
-                } else {
-//
-                }
-            }
-
-
-        } else {
-            count--;
-            LinearLayout linearLayout = (LinearLayout) roomsGridView.getChildAt(position);
-            LinearLayout linearLayout1 = (LinearLayout) linearLayout.getChildAt(0);
-            ImageView imageView = (ImageView) linearLayout1.getChildAt(0);
-            imageView.setImageResource(R.drawable.closed_door);
-
-            for (int i = 0; i < roomNumberWithFloorsWithFaciltyList.size(); i++) {
-                if (roomNumberWithFloorsWithFaciltyList.get(i).getSelectingRoom().contains(splitedCombinedString)) {
-                    roomNumberWithFloorsWithFaciltyList.get(i).setIsSelected(false);
-                }
-            }
-
-            preBookingSelectedRoomNumber = preBookingSelectedRoomNumber.replace(splitedString[0] + ",", "");
-            mSelectedRoomNumber.setText(preBookingSelectedRoomNumber);
-
-        }
-
-
-    }
 
 
     @Override
@@ -562,7 +553,7 @@ public class SelectRoom extends AppCompatActivity {
         switch (id)
         {
             case android.R.id.home:
-               SelectRoom.this.finish();
+                UpgradeRoom.this.finish();
                 break;
         }
 
@@ -582,7 +573,7 @@ public class SelectRoom extends AppCompatActivity {
                 {
                     if(response.body() != null)
                     {
-                       //rooms.add(response.body());
+                        //rooms.add(response.body());
                     }
 
                 }
@@ -600,5 +591,135 @@ public class SelectRoom extends AppCompatActivity {
         });
 
 
+    }
+
+    public void categoryList(final ArrayList<Rooms> roomList)
+    {
+
+
+        new ThreadExecuter().execute(new Runnable() {
+            @Override
+            public void run() {
+
+                final RoomApi getRoomCategories = Util.getClient().create(RoomApi.class);
+                Call<ArrayList<RoomCategories>> getRoomCategoriesResponse = getRoomCategories.
+                        fetchRoomCategoriesByHotelId(Constants.auth_string, bookings.getHotelId());
+
+
+                getRoomCategoriesResponse.enqueue(new Callback<ArrayList<RoomCategories>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<RoomCategories>> call, Response<ArrayList<RoomCategories>> response) {
+
+                        try
+                        {
+                           /* if(dialog != null)
+                            {
+                                dialog.dismiss();
+                            }*/
+                            if(response.code() == 200)
+                            {
+                                if(response.body() != null && response.body().size() != 0)
+                                {
+
+                                }
+
+
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<RoomCategories>> call, Throwable t) {
+                        /*if(dialog != null)
+                        {
+                            dialog.dismiss();
+                        }*/
+                        Toast.makeText(UpgradeRoom.this,t.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+            }
+        });
+    }
+
+    private void showAlertBox(final String pos) {
+        //final Rooms room = rooms.get(pos);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(UpgradeRoom.this);
+        builder.setTitle("Do you want to Change the Room?");
+        //builder.setCancelable(false);
+        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                //send request function here for notification after success full response show next alert box
+                showAlertBoxConfirm(pos);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        android.app.AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
+    public void showAlertBoxConfirm(String roomNum)
+    {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(UpgradeRoom.this);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = (View) inflater.inflate(R.layout.pre_checkin_alert_box2,null);
+        TextView selectedRoomsAlertTextView = (TextView) v.findViewById(R.id.pre_chckin_alert_message_with_room_number);
+        selectedRoomsAlertTextView.setText(getResources().getString(R.string.pre_check_in_confirm_sub_title)+" "+roomNum);
+        TextView changeConfirm = (TextView) v.findViewById(R.id.confirm_note);
+        changeConfirm.setText(getResources().getString(R.string.change_room));
+        builder.setView(v);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //System.out.println("selected rooms = "+ mPreBookSelectedRooms.getText().toString());
+
+                //ChangeRoomActivity.this.finish();
+                if(NoOfRooms != 0)
+                {
+                    HotelNotification notify = new HotelNotification();
+                    notify.setHotelId(bookings.getHotelId());
+                    //System.out.println("roomids = "+roomids);
+                    notify.setMessage(upgradeselectedRoomId+" "+bookings.getBookingNumber()+" "+bookings.getBookingId());
+                    notify.setTitle("Select Room Upgrade Request");
+                    notify.setSenderId(Constants.senderId);
+                    notify.setServerId(Constants.serverId);
+                    sendfirebaseNotification(notify);
+                }
+                else
+                {
+                    HotelNotification notify = new HotelNotification();
+                    notify.setHotelId(bookings.getHotelId());
+                    //System.out.println("roomids = "+roomids);
+                    notify.setMessage(upgradeselectedRoomId+" "+bookings.getBookingNumber()+" "+bookings.getBookingId());
+                    notify.setTitle("Change Room Request");
+                    notify.setSenderId(Constants.senderId);
+                    notify.setServerId(Constants.serverId);
+                    sendfirebaseNotification(notify);
+                }
+
+                dialog.dismiss();
+            }
+        });
+
+
+        android.support.v7.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

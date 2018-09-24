@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:padding="10dp">
+    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Name"
+        app:fontName="arial"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:id="@+id/services_detailed_payment_name"/>
+
+    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Name"
+        app:fontName="arial"
+        android:layout_gravity="center_vertical"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:id="@+id/services_detailed_payment_price"
+        />
+    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="Name"
+        app:fontName="arial"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical|right"
+        android:textSize="14sp"
+        android:id="@+id/services_detailed_payment_status"
+
+        />
+</LinearLayout>

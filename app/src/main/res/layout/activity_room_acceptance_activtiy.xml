@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".UI.BookingDetails.RoomAcceptanceActivtiy">
+
+
+    <ImageView
+        android:id="@+id/app_log"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+
+        android:layout_centerHorizontal="true"
+
+        android:src="@drawable/app_logo" />
+
+    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:fontName="arial"
+        android:layout_below="@id/app_log"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:id="@+id/response_title"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/response_title"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:id="@+id/response_sub_title"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:id="@+id/room_sugestion_parent_layout"
+        android:layout_below="@id/response_sub_title">
+        <!--<GridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="10dp"
+            android:id="@+id/suggested_rooms"
+            android:numColumns="4"
+            ></GridView>-->
+        <app.zingo.zingoguest.CustomViews.CustomFontTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            app:fontName="arial"
+            android:textColor="#000"
+            android:gravity="center"
+            android:text="Suggested Room Numbers"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/suggested_room_numbers"
+            android:layout_marginTop="20dp"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:textColor="#F9A825"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="#43A047"
+                android:text="accept"
+                android:textColor="#fff"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:id="@+id/room_accept_btn"
+                />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorPrimary"
+                android:text="reject"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
+                android:textColor="#fff"
+                android:layout_weight="1"
+                android:id="@+id/room_reject_btn"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

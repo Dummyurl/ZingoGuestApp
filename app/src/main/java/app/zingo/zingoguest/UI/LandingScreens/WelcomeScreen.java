@@ -68,11 +68,17 @@ import app.zingo.zingoguest.Model.Rooms;
 import app.zingo.zingoguest.Model.Traveller;
 import app.zingo.zingoguest.Model.WeatherData;
 import app.zingo.zingoguest.R;
+import app.zingo.zingoguest.UI.BookingDetails.BookingDetailsScreen;
 import app.zingo.zingoguest.UI.BookingDetails.BookingHistoryActivity;
 import app.zingo.zingoguest.UI.BookingDetails.MoreBookingsScreen;
+import app.zingo.zingoguest.UI.BookingDetails.RoomServicePendingListActivity;
 import app.zingo.zingoguest.UI.BookingDetails.TripDetailsScreen;
 import app.zingo.zingoguest.UI.ProfileScreen.ProfileActivity;
+import app.zingo.zingoguest.UI.RoomViews.AmenityScreen;
+import app.zingo.zingoguest.UI.RoomViews.FeedBackScreen;
+import app.zingo.zingoguest.UI.RoomViews.RoomServicesScreen;
 import app.zingo.zingoguest.UI.RoomViews.SelectRoom;
+import app.zingo.zingoguest.UI.RoomViews.UpgradeRoom;
 import app.zingo.zingoguest.Utils.Constants;
 import app.zingo.zingoguest.Utils.PreferenceHandler;
 import app.zingo.zingoguest.Utils.ThreadExecuter;
@@ -355,6 +361,67 @@ public class WelcomeScreen extends AppCompatActivity {
                     bundle.putString("Hotel",mHotelName.getText().toString());
                     bundle.putString("Locality",mHotelLocation.getText().toString());
                     Intent bill = new Intent(WelcomeScreen.this, SelectRoom.class);
+                    bill.putExtras(bundle);
+                    startActivity(bill);
+                }
+            });
+            mUpgradeRoom.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Bookings",activeBooking);
+                    bundle.putString("Hotel",mHotelName.getText().toString());
+                    bundle.putString("Locality",mHotelLocation.getText().toString());
+                    Intent bill = new Intent(WelcomeScreen.this, UpgradeRoom.class);
+                    bill.putExtras(bundle);
+                    startActivity(bill);
+                }
+            });
+
+            mRoomService.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent serviceintent = new Intent(WelcomeScreen.this,RoomServicesScreen.class);
+                    serviceintent.putExtra("BookingHotelId",activeBooking.getHotelId());
+                    serviceintent.putExtra("BookingNumber",activeBooking.getBookingNumber());
+                    serviceintent.putExtra("BookingBookingId",activeBooking.getBookingId());
+                    startActivity(serviceintent);
+                }
+            });
+
+            mAmenity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent serviceintent = new Intent(WelcomeScreen.this,AmenityScreen.class);
+                    serviceintent.putExtra("BookingHotelId",activeBooking.getHotelId());
+                    serviceintent.putExtra("BookingNumber",activeBooking.getBookingNumber());
+                    serviceintent.putExtra("BookingBookingId",activeBooking.getBookingId());
+                    startActivity(serviceintent);
+                }
+            });
+
+            mFeedBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent feedbackintent = new Intent(WelcomeScreen.this,FeedBackScreen.class);
+                    feedbackintent.putExtra("BookingIdCustomerFeedBack",activeBooking.getHotelId());
+                    feedbackintent.putExtra("BookingNumber",activeBooking.getBookingNumber());
+                    feedbackintent.putExtra("BookingBookingId",activeBooking.getBookingId());
+                    startActivity(feedbackintent);
+                }
+            });
+
+            mViewDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Bookings",activeBooking);
+                    Intent bill = new Intent(WelcomeScreen.this, BookingDetailsScreen.class);
                     bill.putExtras(bundle);
                     startActivity(bill);
                 }
@@ -1286,6 +1353,8 @@ public class WelcomeScreen extends AppCompatActivity {
                 break;
 
             case "Pending Services":
+                Intent pendingservicesintent = new Intent(WelcomeScreen.this, RoomServicePendingListActivity.class);
+                startActivity(pendingservicesintent);
                 break;
 
             case "Logout":

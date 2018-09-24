@@ -28,6 +28,9 @@ import app.zingo.zingoguest.Model.Bookings;
 import app.zingo.zingoguest.Model.Rooms;
 import app.zingo.zingoguest.Model.Traveller;
 import app.zingo.zingoguest.R;
+import app.zingo.zingoguest.UI.BookingDetails.BookingDetailsScreen;
+import app.zingo.zingoguest.UI.LandingScreens.WelcomeScreen;
+import app.zingo.zingoguest.UI.RoomViews.SelectRoom;
 import app.zingo.zingoguest.Utils.Constants;
 import app.zingo.zingoguest.Utils.PreferenceHandler;
 import app.zingo.zingoguest.Utils.ThreadExecuter;
@@ -163,10 +166,7 @@ public class PagingBookingsAdapter extends RecyclerView.Adapter {
                             @Override
                             public void onClick(View v) {
 
-                               /* Intent intent = new Intent(context, AvailableRoom.class);
-                                intent.putExtra("BookingNumber",bookings1.getBookingNumber());
-                                intent.putExtra("BookingName","Quick");
-                                context.startActivity(intent);*/
+
 
                             }
                         });
@@ -174,19 +174,12 @@ public class PagingBookingsAdapter extends RecyclerView.Adapter {
                         viewHolder.mViewDetails.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-/*
-                                Bundle bundle = new Bundle();
 
-                                bundle.putString("Email",travellers.getEmail());
-                                bundle.putString("Name",travellers.getFirstName());
-                                bundle.putSerializable("ExpectedCheckInsOrCheckOutActivityTraveller",travellers);
-                                bundle.putSerializable("ExpectedCheckInsOrCheckOutActivityBooking",bookings1);
-                                bundle.putInt("TravelelrId",travellers.getTravellerId());
-                                System.out.println("Travelelr bookinglist id=="+travellers.getTravellerId());
-                                bundle.putString("PhoneNUmber",travellers.getPhoneNumber());
-                                Intent guest = new Intent(context,GuestBookingOverViewActivity.class);
-                                guest.putExtras(bundle);
-                                context.startActivity(guest);*/
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("Bookings",bookings1);
+                                Intent bill = new Intent(context, BookingDetailsScreen.class);
+                                bill.putExtras(bundle);
+                                context.startActivity(bill);
 
                             }
                         });

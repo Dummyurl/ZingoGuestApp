@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card-view="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    tools:context=".UI.BookingDetails.BookingDetailsScreen">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:paddingBottom="10dp"
+                android:orientation="vertical"
+                >
+
+                <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:textColor="#fff"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:layout_toRightOf="@+id/guest_image"
+                    android:text="Name"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/brief_detail_traveller_name"/>
+
+                <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:textColor="#fff"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/guest_image"
+                    android:text="Email"
+                    android:layout_below="@+id/brief_detail_traveller_name"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/brief_detail_traveller_mail"/>
+
+                <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="#fff"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="Mobile"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/guest_image"
+                    android:layout_below="@+id/brief_detail_traveller_mail"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/brief_detail_traveller_mobile"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp">
+
+
+
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/button_curved_multi"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    android:text="View Details"
+                    android:id="@+id/brief_deails_view_btn"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/details_short_name"
+                            android:background="@drawable/circular_border"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="hi"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/details_person_name"
+                            android:textColor="#000"
+                            android:textStyle="bold"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:layout_gravity="center_vertical"/>
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:ems="7"
+                            android:id="@+id/booking_details_booking_status"
+                            android:background="#46A865"
+                            android:text="Confirmed"
+                            android:textColor="#fff"
+                            android:layout_gravity="center"
+                            />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="#afafaf"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="Details"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:textSize="18sp"
+                        android:background="#dcdbdb"/>
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Booking ID"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_booking_id"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentEnd="true" />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Booking Date"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_booking_date"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Booking Status"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_booking_status"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Check In"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_check_in"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Check Out"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_check_out"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp"
+                                android:orientation="horizontal">
+
+
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:layout_weight="1"
+                                    android:text="Room Type"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:layout_weight="1"
+                                    android:text=""
+                                    android:layout_gravity="center"
+                                    android:gravity="right"
+                                    android:id="@+id/details_room_type"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </LinearLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Guest Count"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_guest_count"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Base Price"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_base_price"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="GST Amount"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:id="@+id/details_gst_price"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="false"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+                                    android:text="Total Amount"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:paddingLeft="20dp"
+
+                                    android:id="@+id/details_total_amount"
+                                    android:paddingRight="20dp"
+                                    android:textColor="#5c5c5c"
+                                    android:textSize="18sp"
+                                    />
+
+                            </RelativeLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    android:paddingLeft="20dp"
+                                    android:background="#cfcbcb"
+                                    android:layout_marginBottom="10dp"
+                                    android:text="Payment Details"/>
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/detailed_payments_lists"
+                                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                                    android:scrollbars="none"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="No Data Found"
+                                    android:id="@+id/no_payment_data"
+                                    android:textSize="18sp"
+                                    android:gravity="center"/>
+
+                            </LinearLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="0.5dp"
+                                android:background="#b1b0b0"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#262626"
+                                    android:textSize="18sp"
+                                    android:paddingLeft="20dp"
+                                    android:background="#cfcbcb"
+                                    android:layout_marginBottom="10dp"
+                                    android:text="Service Details"/>
+                                <android.support.v7.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/detailed_services_lists"
+                                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                                    android:scrollbars="none"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="No Data Found"
+                                    android:id="@+id/no_service_data"
+                                    android:textSize="18sp"
+                                    android:gravity="center"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:id="@+id/update_button_parent">
+                                <Button
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:layout_marginRight="5dp"
+                                    android:background="@drawable/button_curved_multi"
+                                    android:text="Check out"
+                                    android:id="@+id/update_check_out"
+                                    android:textColor="#fff"
+                                    android:layout_alignParentBottom="true"/>
+                                <Button
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/button_curved_multi"
+                                    android:visibility="gone"
+                                    android:text="No Show"
+                                    android:layout_weight="1"
+                                    android:layout_marginRight="5dp"
+                                    android:id="@+id/update_no_show"
+                                    android:textColor="#fff"
+                                    android:layout_alignParentBottom="true"/>
+                                <Button
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:background="@drawable/button_curved_multi"
+                                    android:text="Cancel"
+                                    android:layout_weight="1"
+                                    android:layout_marginLeft="5dp"
+                                    android:id="@+id/update_cancel"
+                                    android:textColor="#fff"
+                                    android:layout_alignParentBottom="true"/>
+                            </LinearLayout>
+
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:visibility="gone"
+                                android:background="@color/colorPrimary"
+                                android:text="Genrate PDF and Send Email"
+                                android:id="@+id/send_pdf_report"
+                                android:textColor="#fff"
+                                android:layout_alignParentBottom="true"/>
+
+                        </LinearLayout>
+                    </ScrollView>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:text="Ratings Given By Guest"
+                        android:layout_weight="1"
+                        />
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:id="@+id/rating_by_customer"
+                        android:text="4.2"
+                        android:layout_weight="1"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:text="Ratings for Guest"
+                        android:layout_weight="1"
+                        />
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:id="@+id/rating_by_hotelier"
+                        android:text="4.7"
+                        android:layout_weight="1"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:text="Total Room Payment"
+                        android:layout_weight="1"
+                        />
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:id="@+id/total_room_payment"
+                        android:text="0"
+                        android:layout_weight="1"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:text="Total Service Payment"
+                        android:layout_weight="1"
+                        />
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:id="@+id/total_service_payment"
+                        android:text="0"
+                        android:layout_weight="1"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:text="Total Payment"
+                        android:layout_weight="1"
+                        />
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:id="@+id/total_payment"
+                        android:text="0"
+                        android:layout_weight="1"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:text="Average Payment"
+                        android:layout_weight="1"
+                        />
+                    <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        app:fontName="arial"
+                        android:textSize="14sp"
+                        android:id="@+id/average_payment"
+                        android:text="0"
+                        android:layout_weight="1"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

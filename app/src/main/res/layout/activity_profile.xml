@@ -258,6 +258,253 @@
                 android:background="#fff"
                 android:drawableRight="@drawable/logout"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/revenue_layout"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="5dp"
+                    app:cardElevation="5dp"
+                    card_view:cardCornerRadius="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_weight="2"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+                            <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                                android:id="@+id/total_confirm_booking"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="25sp"
+                                app:fontName="arial"
+                                android:text="0"
+                                android:gravity="center"
+                                android:paddingTop="5dp"
+                                android:paddingLeft="15dp"
+                                android:textColor="#720D5D"
+                                />
+
+
+                        </LinearLayout>
+
+                        <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            app:fontName="arial"
+                            android:gravity="center_horizontal"
+                            android:text="Completed Bookings"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:textColor="#000"
+                            />
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="5dp"
+                    app:cardElevation="5dp"
+                    card_view:cardCornerRadius="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_weight="2"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+                            <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                                android:id="@+id/total_cancel_booking"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="25sp"
+                                app:fontName="arial"
+                                android:text="0"
+                                android:gravity="center"
+                                android:paddingTop="5dp"
+                                android:paddingLeft="15dp"
+                                android:textColor="#D500F9"
+                                />
+
+
+                        </LinearLayout>
+
+                        <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            app:fontName="arial"
+                            android:gravity="center_horizontal"
+                            android:text="Cancelled Bookings"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:textColor="#000"
+                            />
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/revenue_layout"
+                android:orientation="horizontal">
+
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="5dp"
+                    app:cardElevation="5dp"
+                    card_view:cardCornerRadius="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_weight="2"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+                            <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                                android:id="@+id/total_upcoming_booking"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="25sp"
+                                app:fontName="arial"
+                                android:text="0"
+                                android:gravity="center"
+                                android:paddingTop="5dp"
+                                android:paddingLeft="15dp"
+                                android:textColor="#D500F9"
+                                />
+
+
+                        </LinearLayout>
+
+                        <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            app:fontName="arial"
+                            android:gravity="center_horizontal"
+                            android:text="Upcoming Bookings"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:textColor="#000"
+                            />
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="5dp"
+                    app:cardElevation="5dp"
+                    card_view:cardCornerRadius="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_weight="2"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+                            <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                                android:id="@+id/total_bookings"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="25sp"
+                                app:fontName="arial"
+                                android:text="0"
+                                android:gravity="center"
+                                android:paddingTop="5dp"
+                                android:paddingLeft="15dp"
+                                android:textColor="#D500F9"
+                                />
+
+
+                        </LinearLayout>
+
+                        <app.zingo.zingoguest.CustomViews.CustomFontTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            app:fontName="arial"
+                            android:gravity="center_horizontal"
+                            android:text="Total Bookings"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:textColor="#000"
+                            />
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+
+            </LinearLayout>
+
         </LinearLayout>
     </RelativeLayout>
 </ScrollView>
