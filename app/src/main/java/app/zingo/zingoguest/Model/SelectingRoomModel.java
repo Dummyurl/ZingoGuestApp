@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 public class SelectingRoomModel implements Serializable {
 
-    private Rooms rooms;
+    private RoomResponse rooms;
     private String selectingRoom;
     public boolean isSelected;
 
-    public SelectingRoomModel(String selectingRoom, Rooms rooms)
+    public SelectingRoomModel(String selectingRoom, RoomResponse rooms)
     {
         this.selectingRoom = selectingRoom;
         this.rooms = rooms;
@@ -21,11 +21,11 @@ public class SelectingRoomModel implements Serializable {
 
     public SelectingRoomModel() {}
 
-    public Rooms getRooms() {
+    public RoomResponse getRooms() {
         return rooms;
     }
 
-    public void setRooms(Rooms rooms) {
+    public void setRooms(RoomResponse rooms) {
         this.rooms = rooms;
     }
 

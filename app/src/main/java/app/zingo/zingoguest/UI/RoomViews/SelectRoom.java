@@ -51,30 +51,23 @@ import retrofit2.Response;
 public class SelectRoom extends AppCompatActivity {
 
     //View
-    private ScrollView mScrollView;
     private Button mPreCheckInBtn;
     private LinearLayout mNoRoomsMatching;
-    private TextView mSelectedFloorLevels,mPreBookHotelName,mPreHotelPlace;
+    private TextView mPreBookHotelName,mPreHotelPlace;
 
-    private ListView itemsList;
 
     private ProgressDialog progressDialog;
-    private ArrayList<Rooms> rooms;
+    private ArrayList<RoomResponse> rooms;
 
     public ArrayList<SelectingRoomModel> roomNumberWithFloorsWithFaciltyList;
-    private ListView selectedItemsListView;
 
 
-    private LinearLayout mSelectFloors;
-    private RelativeLayout mSelectFeatures;
     private GridView roomsGridView;
     private TextView mSelectedRoomNumber,mNoOfRooms;
-    String localty;
 
     //String selectedRoomNumber = "";
-    public int count=0,totalAvailableRooms = 0,totalBookedRooms=0,expectedCheckIns=0,
-            expectedCheckOuts=0,totalBlockedRooms=0;
-    public String selecteditem = "",selectedRoomNumber = "",preBookingSelectedRoomNumber="";
+    public int count=0;
+    public String preBookingSelectedRoomNumber="";
     ArrayList<SelectingRoomModel> filteredRooms;
 
     //Intent
@@ -343,21 +336,18 @@ public class SelectRoom extends AppCompatActivity {
 
                             if(list != null && list.size() != 0)
                             {
-                                rooms = new ArrayList<>();
-                                for(int i=0;i<list.size();i++){
-                                    System.out.println("Room id = "+list.get(i).getRoomId());
+                                rooms =  list;
 
-                                    getRoomNo(list.get(i).getRoomId());
 
-                                }
+                                    Collections.sort(rooms,new SortRooms());
+
+                                    selectRoomAdapter(rooms);
+
+
 
                             }
 
-                            if(rooms!=null&&rooms.size()!=0){
-                                Collections.sort(rooms,new SortRooms());
 
-                                selectRoomAdapter(rooms);
-                            }
 
                         }else {
                             if (progressDialog!=null)
@@ -383,11 +373,11 @@ public class SelectRoom extends AppCompatActivity {
 
     }
 
-    class SortRooms implements Comparator<Rooms>
+    class SortRooms implements Comparator<RoomResponse>
     {
 
         @Override
-        public int compare(Rooms o1, Rooms o2) {
+        public int compare(RoomResponse o1, RoomResponse o2) {
             if(o1 != null && o2 != null)
             {
                 return (o1.getRoomNo().compareTo(o2.getRoomNo()));
@@ -398,12 +388,12 @@ public class SelectRoom extends AppCompatActivity {
             }
         }
     }
-    private void selectRoomAdapter(ArrayList<Rooms> hotelRooms){
+    private void selectRoomAdapter(ArrayList<RoomResponse> hotelRooms){
 
         roomNumberWithFloorsWithFaciltyList = new ArrayList<>();
-        for(Rooms room:hotelRooms/*getResources().getStringArray(R.array.hotel_rooms_with_floors_features)*/)
+        for(RoomResponse room:hotelRooms/*getResources().getStringArray(R.array.hotel_rooms_with_floors_features)*/)
         {
-            String s = room.getDisplayName();
+            String s = room.getRoomNo();
             roomNumberWithFloorsWithFaciltyList.add(new SelectingRoomModel(s,room));
         }
 
@@ -575,7 +565,7 @@ public class SelectRoom extends AppCompatActivity {
                 {
                     if(response.body() != null)
                     {
-                       rooms.add(response.body());
+                       //rooms.add(response.body());
                     }
 
                 }
